@@ -1,0 +1,60 @@
+
+MASTER_NAME = kbase
+SCHEDD_NAME = kbase
+SCHEDD_HOST = kbase@ci-dock
+
+LOCAL_DIR = /usr/local/condor	
+
+RUN     = $(LOCAL_DIR)/run/condor	
+LOG     = $(LOCAL_DIR)/log/condor	
+LOCK    = $(LOCAL_DIR)/lock/condor	
+SPOOL   = $(LOCAL_DIR)/lib/condor/spool	
+EXECUTE = $(LOCAL_DIR)/lib/condor/condor_job_execute
+
+CONDOR_IDS = 0.0
+
+ALLOW_WRITE = *
+FLOCK_FROM = *
+
+# If the environment variable USE_TCP is set to true, the template will enable
+# this group of directives that convert communications to TCP
+# per https://lists.cs.wisc.edu/archive/htcondor-users/2011-August/msg00085.shtml
+# UPDATE_COLLECTOR_WITH_TCP = True
+# UPDATE_COLLECTOR_WITH_TCP = True
+# WANT_UDP_COMMAND_SOCKET = False
+# COLLECTOR_MAX_FILE_DESCRIPTORS = 3000
+UPDATE_COLLECTOR_WITH_TCP = True
+UPDATE_VIEW_COLLECTOR_WITH_TCP = True
+WANT_UDP_COMMAND_SOCKET = False
+COLLECTOR_MAX_FILE_DESCRIPTORS = 3000
+
+SEC_DEFAULT_AUTHENTICATION = REQUIRED
+SEC_DEFAULT_AUTHENTICATION_METHODS = PASSWORD
+SEC_CLIENT_AUTHENTICATION_METHODS = PASSWORD
+ 
+SEC_DEFAULT_NEGOTIATION = REQUIRED 
+
+# Set this so that anonymous users (including SOAP users) can insert jobs into the queue
+# QUEUE_ALL_USERS_TRUSTED = False
+# Set anonymous users to map to the SCHEDD_NAME - kbase by default
+# CONDOR_ANONYMOUS_USER = kbase
+
+START = True
+
+SEC_PASSWORD_FILE = /etc/condor/password
+SEC_DAEMON_AUTHENTICATION = REQUIRED
+SEC_DAEMON_INTEGRITY = REQUIRED
+SEC_DAEMON_AUTHENTICATION_METHODS = PASSWORD
+SEC_NEGOTIATOR_AUTHENTICATION = REQUIRED
+SEC_NEGOTIATOR_INTEGRITY = REQUIRED
+SEC_NEGOTIATOR_AUTHENTICATION_METHODS = PASSWORD
+SEC_CLIENT_AUTHENTICATION_METHODS = PASSWORD
+ALLOW_DAEMON = condor_pool@$(UID_DOMAIN)/*, \
+               kbase@$(UID_DOMAIN)/$(IP_ADDRESS)
+ALLOW_NEGOTIATOR = condor_pool@$(UID_DOMAIN)/*,kbase@$(UID_DOMAIN)/$(IP_ADDRESS)
+ALLOW_COLLECTOR = condor_pool@$(UID_DOMAIN)/*,kbase@$(UID_DOMAIN)/$(IP_ADDRESS)
+ALLOW_ADVERTISE_STARTD = condor_pool@$(UID_DOMAIN)/*,kbase@$(UID_DOMAIN)/$(IP_ADDRESS)
+
+# Options for frequency of negotiation, and minimum time length of the negotiation cycle
+NEGOTIATOR_INTERVAL = 5
+NEGOTIATOR_CYCLE_DELAY = 5
